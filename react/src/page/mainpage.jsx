@@ -12,7 +12,7 @@ function Chatbot() {
   const messagesEndRef = useRef(null);
 
   // Backend API URL
-  const API_URL = 'http://localhost:5000/api/chat';
+  const API_URL = 'https://chatbot-project-159z.onrender.com';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
