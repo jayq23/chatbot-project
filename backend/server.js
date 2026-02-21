@@ -21,6 +21,7 @@ app.post('/api/chat', async (req, res) => {
       body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
     });
     const data = await response.json();
+    console.log("Gemini response:", JSON.stringify(data)); // Log full response for debugging
     if (data.candidates?.[0]) {
       res.json({ success: true, response: data.candidates[0].content.parts[0].text });
     } else {
