@@ -10,6 +10,26 @@ function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
+    if(username === '' || email === '' || password === '' || confirmPassword === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    if(username.length < 3) {
+      alert('Username must be at least 3 characters');
+      setUsername('');
+      return;
+    }
+    if(username.length > 15) {
+      alert('Username must be less than 15 characters');
+      setUsername('');
+      return;
+    }
+    if(password.length < 6) {
+      alert('Password must be at least 6 characters');
+      setPassword('');
+      setConfirmPassword('');
+      return;
+    }
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       setPassword('');

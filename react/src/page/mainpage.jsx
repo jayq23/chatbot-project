@@ -112,7 +112,7 @@ function Chatbot() {
 
   const handleLogout = () => {
     if(window.confirm('Are you sure you want to log out?')) {
-      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('currentUser');
       navigate('/');
     } else {
       return;

@@ -12,21 +12,21 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     const form = e.target;
-    const username = form[0].value;
-    const password = form[1].value;
+    const username = form.querySelector('input[type="text"]').value;
+    const password = form.querySelector('input[type="password"]').value;
 
     if(username === '' || password === '') {
       alert('Please fill in all fields');
       return;
     }
-    if(password.length < 6) {
-      alert('Password must be at least 6 characters');
-      form[1].value = '';
-      return;
-    }
     if(username.length < 3) {
       alert('Username must be at least 3 characters');
-      form[0].value = '';
+      form.querySelector('input[type="text"]').value = '';
+      return;
+    }
+    if(password.length < 6) {
+      alert('Password must be at least 6 characters');
+      form.querySelector('input[type="password"]').value = '';
       return;
     }
     if(username.length > 15) {
@@ -45,8 +45,8 @@ function Login() {
         return;
       } else {
         alert('Invalid credentials');
-        form[0].value = '';
-        form[1].value = '';
+        form.querySelector('input[type="text"]').value = '';
+        form.querySelector('input[type="password"]').value = '';
         return;
       }
     }
@@ -57,8 +57,8 @@ function Login() {
       navigate('/chatbot');
     } else {
       alert('Invalid credentials');
-      form[0].value = '';
-      form[1].value = '';
+      form.querySelector('input[type="text"]').value = '';
+      form.querySelector('input[type="password"]').value = '';
     }
   }
   const handleshowpassword = () => {
