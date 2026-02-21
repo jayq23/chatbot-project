@@ -7,13 +7,14 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Backend running!' });
 });
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
+    console.log("User sent:", message);
     const response = await fetch(GEMINI_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,6 +27,7 @@ app.post('/api/chat', async (req, res) => {
       res.status(500).json({ success: false, error: 'No response' });
     }
   } catch (error) {
+    console.error("DETAILED ERROR:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
