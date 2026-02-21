@@ -33,6 +33,3 @@ app.listen(PORT, () => {
   console.log('Server on port 5000');
   console.log('API ' + (GEMINI_API_KEY ? '✅' : '❌'));
 });
-
-const cors = require('cors');
-app.use(cors());
