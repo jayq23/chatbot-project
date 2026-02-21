@@ -1,0 +1,183 @@
+/* Homepage.css - Professional styling for renz Chatbot */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main container */
+.home-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #5c3e71 0%, #2a1e37 100%);
+  padding: 2rem;
+  position: relative;
+}
+
+/* Heading */
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 3rem;
+  text-align: center;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeInDown 0.8s ease-out;
+}
+
+/* Buttons container */
+.buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+/* Base button styles */
+button {
+  padding: 0.875rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 140px;
+}
+
+/* Sign In button */
+.signinbtn {
+  background-color: #351d56;
+  color: #ffffff;
+}
+
+.signinbtn:hover {
+  background-color: #1a072b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.signinbtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Sign Up button */
+.signupbtn {
+  background-color: #22134a;
+  color: #ffffff;
+}
+
+.signupbtn:hover {
+  background-color: #1b0851;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.signupbtn:active {
+  transform: translateY(0); 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+.logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 2rem;
+  animation: fadeInDown 0.8s ease-out 0.1s both;
+}
+
+/* Footer */
+footer {
+  position: absolute;
+  bottom: 2rem;
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+footer p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  button {
+    width: 100%;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  button {
+    padding: 0.75rem 2rem;
+    font-size: 0.9375rem;
+  }
+
+  footer p {
+    font-size: 0.8125rem;
+  }
+}

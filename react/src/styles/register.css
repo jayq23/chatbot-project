@@ -1,0 +1,185 @@
+/* register.css - Professional styling for Register Form */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main container */
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+ background: linear-gradient(135deg, #5c3e71 0%, #2a1e37 100%);
+  padding: 2rem;
+}
+.regbackbtn{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 15px;
+  padding: 10px 1rem;
+  background-color: #410c68;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.regbackbtn:hover {
+  background-color: #5a1585;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+/* Heading */
+.registerForm h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+/* Form container */
+.registerForm form {
+  background: #ffffff;
+  padding: 3rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Input fields */
+.registerForm input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.registerForm input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #4a3bf3;
+  transform: translateY(-2px);
+}
+
+.registerForm input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+/* Remove last input margin */
+.registerForm input:last-of-type {
+  margin-bottom: 2rem;
+}
+
+/* Submit button */
+.regbtn {
+  width: 100%;
+  padding: 1rem;
+  background: #2c0e7e;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.regbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(4, 35, 156, 0.5);
+  background-color: #2c1b5a;
+}
+
+.regbtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(15, 24, 61, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .registerForm h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .registerForm form {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .registerForm {
+    padding: 1rem;
+  }
+
+  .registerForm h2 {
+    font-size: 1.75rem;
+  }
+
+  .registerForm form {
+    padding: 2rem 1.5rem;
+  }
+
+  .registerForm input {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .registerForm button {
+    padding: 0.875rem;
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility - focus visible for keyboard navigation */
+.registerForm input:focus-visible,
+.registerForm button:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Error state (optional - add class when needed) */
+.registerForm input.error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.registerForm input.error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+/* Success state (optional - add class when needed) */
+.registerForm input.success {
+  border-color: #28a745;
+  background-color: #f0fff4;
+}
+
+.registerForm input.success:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+}
