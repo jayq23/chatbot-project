@@ -25,6 +25,7 @@ app.post('/api/chat', async (req, res) => {
     if (data.candidates?.[0]) {
       res.json({ success: true, response: data.candidates[0].content.parts[0].text });
     } else {
+      console.log("No candidates, full response:", JSON.stringify(data));
       res.status(500).json({ success: false, error: 'No response' });
     }
   } catch (error) {
