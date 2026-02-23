@@ -1,39 +1,34 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import Groq from 'groq-sdk';
+
 dotenv.config();
 const app = express();
 const PORT = 5000;
 app.use(cors());
 app.use(express.json());
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Backend running!' });
 });
+
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
-    console.log("User sent:", message);
-    const response = await fetch(GEMINI_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
+    const completion = await groq.chat.completions.create({
+      messages: [{ role: 'user', content: message }],
+      model: 'llama-3.3-70b-versatile',
     });
-    const data = await response.json();
-    console.log("Gemini response:", JSON.stringify(data)); // Log full response for debugging
-    if (data.candidates?.[0]) {
-      res.json({ success: true, response: data.candidates[0].content.parts[0].text });
-    } else {
-      console.log("No candidates, full response:", JSON.stringify(data));
-      res.status(500).json({ success: false, error: 'No response' });
-    }
+    res.json({ success: true, response: completion.choices[0].message.content });
   } catch (error) {
-    console.error("DETAILED ERROR:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 app.listen(PORT, () => {
   console.log('Server on port 5000');
-  console.log('API ' + (GEMINI_API_KEY ? '✅' : '❌'));
+  console.log('API ' + (process.env.GROQ_API_KEY ? '✅' : '❌'));
 });
