@@ -22,7 +22,7 @@ function Homepage() {
         <button className="signupbtn" onClick={handleSignUp}>Sign Up</button>
       </div>
       <footer>
-        <p>© 2024 renz Chatbot. All rights reserved.</p>
+        <p>© 2026 renz Chatbot. All rights reserved.</p>
       </footer>
     </div>
   );

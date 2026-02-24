@@ -6,5 +6,10 @@
     "build": "cd react && npm run build",
     "preview": "cd react && npm run preview",
     "lint": "cd react && npm run lint"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0"
   }
 }
