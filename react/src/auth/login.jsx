@@ -1,11 +1,12 @@
 import '../styles/login.css'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { auth, db } from '../../firebase'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth'
 import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore'
 import facebook from '../assets/facebook.png'
 import google from '../assets/google.png'
+import { onAuthStateChanged } from "firebase/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ function Login() {
       const email = userDoc.email
 
       await signInWithEmailAndPassword(auth, email, password)
-      navigate('/chatbot')
+      navigate('/mainpage')
 
     } catch (error) {
       if(error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
@@ -86,16 +87,23 @@ function Login() {
           createdAt: new Date()
         })
       }
-
-      navigate('/mainpage')
     } catch (error) {
       alert('Google login failed: ' + error.message)
     }
   }
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      navigate('/mainpage');
+    }
+  });
 
+  return () => unsubscribe();
+}, [navigate]);        
   const handleFacebookLogin = async () => {
     try {
       const provider = new FacebookAuthProvider()
+      provider.addScope('email');
       const result = await signInWithPopup(auth, provider)
       const user = result.user
 
