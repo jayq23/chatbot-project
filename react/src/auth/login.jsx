@@ -87,7 +87,7 @@ function Login() {
         })
       }
 
-      navigate('/chatbot')
+      navigate('/mainpage')
     } catch (error) {
       alert('Google login failed: ' + error.message)
     }
@@ -111,7 +111,7 @@ function Login() {
         })
       }
 
-      navigate('/chatbot')
+      navigate('/mainpage')
     } catch (error) {
       alert('Facebook login failed: ' + error.message)
     }
