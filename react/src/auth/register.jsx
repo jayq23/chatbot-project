@@ -1,15 +1,21 @@
 import '../styles/register.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { auth, db } from '../../firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+
 function Register() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+
     if(username === '' || email === '' || password === '' || confirmPassword === '') {
       alert('Please fill in all fields');
       return;
@@ -30,37 +36,54 @@ function Register() {
       setConfirmPassword('');
       return;
     }
-    if (password !== confirmPassword) {
+    if(password !== confirmPassword) {
       alert('Passwords do not match');
       setPassword('');
       setConfirmPassword('');
       return;
     }
-    
-    // Store user credentials in localStorage
-    const newUser = {
-      username: username,
-      email: email,
-      password: password
-    };
-    localStorage.setItem('user_' + username, JSON.stringify(newUser));
-    localStorage.setItem('isAuthenticated', 'true');
-    
-    alert('Registration successful! Please log in.');
-    navigate('/login');
+
+    try {
+      setLoading(true);
+
+      // Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      // Save username to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        username: username,
+        email: email,
+        createdAt: new Date()
+      })
+
+      alert('Registration successful! Please log in.')
+      navigate('/login')
+
+    } catch (error) {
+      if(error.code === 'auth/email-already-in-use') {
+        alert('Email is already registered!')
+      } else {
+        alert('Registration failed: ' + error.message)
+      }
+    } finally {
+      setLoading(false)
+    }
   }
-  
+
   return (
     <div className="registerForm">
-      <button className="regbackbtn" onClick={() => navigate(-1)}>back </button>
-        <h2>Register</h2>
-        <form onSubmit={handleRegister}>
-            <input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-            <input type="password" placeholder="Confirm Password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-            <button className='regbtn' type="submit">Register</button>
-        </form>
+      <button className="regbackbtn" onClick={() => navigate(-1)}>back</button>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" placeholder="Confirm Password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+        <button className='regbtn' type="submit" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
+      </form>
     </div>
   )
 }

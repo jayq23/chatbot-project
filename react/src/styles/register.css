@@ -12,6 +12,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 /* Main container */
@@ -21,22 +22,34 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
- background: linear-gradient(135deg, #5c3e71 0%, #2a1e37 100%);
+  min-height: 100dvh;
+  background: linear-gradient(135deg, #5c3e71 0%, #2a1e37 100%);
   padding: 2rem;
+  /* iOS notch / home bar safe areas */
+  padding-top: calc(2rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
 }
 .regbackbtn{
   position: absolute;
   top: 20px;
   left: 20px;
+  /* Respect notch on iOS */
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  left: calc(20px + env(safe-area-inset-left, 0px));
   font-size: 15px;
-  padding: 10px 1rem;
-  background-color: #410c68;
-  color: #ffffff;
+  font-weight: 600;
   border: none;
   border-radius: 8px;
+  padding: 10px 1rem;
   cursor: pointer;
-  font-weight: 600;
+  background-color: #410c68;
+  color: #ffffff;
   transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* Minimum touch target */
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .regbackbtn:hover {
@@ -71,6 +84,7 @@ body {
   margin-bottom: 1.25rem;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
+  /* 16px prevents iOS Safari auto-zoom on input focus */
   font-size: 1rem;
   transition: all 0.3s ease;
   background-color: #f8f9fa;
@@ -80,7 +94,8 @@ body {
 .registerForm input:focus {
   outline: none;
   background-color: #ffffff;
-  border-color: #4a3bf3;
+  border-color: #432774;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);  
   transform: translateY(-2px);
 }
 
@@ -107,6 +122,10 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* Minimum touch target */
+  min-height: 44px;
 }
 
 .regbtn:hover {
@@ -132,9 +151,12 @@ body {
   }
 }
 
+/* Small phones */
 @media (max-width: 480px) {
   .registerForm {
     padding: 1rem;
+    padding-top: calc(1rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
   .registerForm h2 {
@@ -142,17 +164,50 @@ body {
   }
 
   .registerForm form {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1.25rem;
   }
 
   .registerForm input {
     padding: 0.875rem 1rem;
-    font-size: 0.9375rem;
+    /* 16px prevents iOS auto-zoom */
+    font-size: 1rem;
   }
 
   .registerForm button {
     padding: 0.875rem;
     font-size: 1rem;
+  }
+  .regbackbtn{
+    font-size: 12px;
+    padding: 6px 10px;
+    min-width: unset;
+    min-height: 36px;
+    width: auto;
+  }
+}
+
+/* Landscape on phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .registerForm {
+    justify-content: flex-start;
+    padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+    padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+  }
+
+  .registerForm h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .registerForm form {
+    padding: 1.25rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .registerForm input {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem 1rem;
   }
 }
 

@@ -12,6 +12,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior: none;
 }
 
 /* Main chatbot container */
@@ -19,6 +21,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  /* dvh accounts for mobile browser chrome (address bar shrinking) */
+  height: 100dvh;
   background-color: #3b2154;
 }
 
@@ -61,6 +65,10 @@ body {
   width: 95%;
   margin: 0 auto;
   animation: fadeIn 0.6s ease-out;
+  /* Smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Ensure content isn't hidden behind iOS home bar */
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* Scrollbar styling */
@@ -159,6 +167,8 @@ body {
 .chatbot-input-form {
   background: #f3e2f8e7;
   padding: 1.25rem 1.5rem;
+  /* Add safe area padding for iPhone home indicator */
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   gap: 0.75rem;
@@ -194,8 +204,10 @@ body {
 }
 
 .send-button {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   background-color: #210148;
   border: none;
   border-radius: 50%;
@@ -207,6 +219,12 @@ body {
   flex-shrink: 0;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent;
+  /* Ensure proper touch target */
+  touch-action: manipulation;
+  /* Prevent border-radius from clipping the SVG on some mobile browsers */
+  overflow: visible;
 }
 
 .send-button:hover {
@@ -220,22 +238,34 @@ body {
 }
 
 .send-button svg {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
+  /* Explicit stroke so it renders on all mobile browsers */
+  stroke: #ffffff;
+  fill: none;
+  display: block;
+  pointer-events: none;
+  flex-shrink: 0;
 }
 .logoutbtn {
   position: absolute;
-  top: 20px;
+  top: 10px;
   left: 20px;
   font-size: 15px;
   font-weight: 600;
   border: none;
   border-radius: 8px;
-  padding: 10px 5px;
+  padding: 10px 20px;
   cursor: pointer;
   background-color: #2f1642;
   color: #ffffff;
   transition: all 0.3s ease;
+  /* Remove tap flash on mobile */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* Ensure minimum touch target size (44x44px recommended) */
+  min-width: 44px;
+  min-height: 44px;
 }
 .logoutbtn:hover {
   background-color: #3e1865;
@@ -290,6 +320,8 @@ body {
 @media (max-width: 768px) {
   .chatbot-header {
     padding: 1rem 1.25rem;
+    /* Add notch/status bar safe area on iOS */
+    padding-top: calc(1rem + env(safe-area-inset-top, 0px));
   }
 
   .bot-avatar {
@@ -304,6 +336,7 @@ body {
 
   .chatbot-messages {
     padding: 1.5rem 1rem;
+    width: 100%;
   }
 
   .message-content {
@@ -313,10 +346,40 @@ body {
 
   .chatbot-input-form {
     padding: 1rem 1.25rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    max-width: 100%;
+  }
+  .logoutbtn {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-width: unset;
+    min-height: 36px;
+    font-weight: bold;
+    width: auto;
+  }
+  .header-content {
+    max-width: 100%;
+    height: 40px;
+  }
+  .send-button {
+    width: 40px;
+    height: 40px;
+  }
+  .send-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: #ffffff;
   }
 }
 
+/* Small phones */
 @media (max-width: 480px) {
+  .chatbot-header {
+    padding: 0.875rem 1rem;
+    padding-top: calc(0.875rem + env(safe-area-inset-top, 0px));
+  }
+
   .header-text h2 {
     font-size: 1.125rem;
   }
@@ -327,6 +390,7 @@ body {
 
   .chatbot-messages {
     padding: 1rem 0.75rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
   .message-content {
@@ -337,17 +401,56 @@ body {
 
   .chatbot-input {
     padding: 0.75rem 1rem;
-    font-size: 0.9375rem;
+    /* font-size 16px prevents iOS from auto-zooming in on the input */
+    font-size: 1rem;
   }
 
   .send-button {
-    width: 45px;
-    height: 45px;
+    width: 44px;
+    height: 44px;
   }
 
   .send-button svg {
     width: 18px;
     height: 18px;
+    stroke: #ffffff;
+  }
+
+  .logoutbtn {
+    top: calc(10px + env(safe-area-inset-top, 0px));
+    left: 10px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+/* Landscape mode on phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .chatbot-header {
+    padding: 0.5rem 1rem;
+    padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+  }
+
+  .header-text h2 {
+    font-size: 1rem;
+  }
+
+  .chatbot-messages {
+    padding: 0.75rem 1rem;
+    padding-left: calc(0.75rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(0.75rem + env(safe-area-inset-right, 0px));
+  }
+
+  .chatbot-input-form {
+    padding: 0.5rem 1rem;
+    padding-left: calc(0.5rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(0.5rem + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .message-content {
+    max-width: 75%;
   }
 }
 
