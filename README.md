@@ -15,5 +15,5 @@ Deployment
 - Frontend: Vercel
 - Backend: Render
 
-Live Demo
+Live Demo:
 chatbot-project-nyd8.vercel.app
