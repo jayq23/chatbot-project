@@ -1,9 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
 import '../styles/main.css';
 import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase";
+import { signOut } from "firebase/auth";
 
 function Chatbot() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate('/login');
+    }
+  });
+
+  return () => unsubscribe();
+}, [navigate]);
   const [messages, setMessages] = useState([
     { text: "Hello! I'm Renz Chatbot. How can I help you today?", sender: 'bot' }
   ]);
@@ -110,14 +123,13 @@ function Chatbot() {
     }
   };
 
-  const handleLogout = () => {
-    if(window.confirm('Are you sure you want to log out?')) {
-      localStorage.removeItem('currentUser');
-      navigate('/');
-    } else {
-      return;
-    }
+  const handleLogout = async () => {
+  if (window.confirm('Are you sure you want to log out?')) {
+    await signOut(auth);
+    navigate('/login');
   }
+};
+
   return (
     <div className="chatbot-container">
       <div className="chatbot-header">
