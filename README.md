@@ -4,7 +4,6 @@ Features
 - User login and registration (Email, Google, Facebook)
 - AI-powered chatbot using Groq API
 - Secure backend with Helmet, CORS, and Rate Limiting
-- Chat history saved per user
 
 Tech Stack
 - Frontend: React, Vite
