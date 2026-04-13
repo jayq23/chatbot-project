@@ -17,17 +17,19 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const loginInput = username.trim();
+    const isEmailLogin = loginInput.includes('@');
 
-    if(username === '' || password === '') {
+    if(loginInput === '' || password === '') {
       alert('Please fill in all fields');
       return;
     }
-    if(username.length < 3) {
+    if(!isEmailLogin && loginInput.length < 3) {
       alert('Username must be at least 3 characters');
       setUsername('');
       return;
     }
-    if(username.length > 15) {
+    if(!isEmailLogin && loginInput.length > 15) {
       alert('Username must be less than 15 characters');
       setUsername('');
       return;
@@ -41,8 +43,14 @@ function Login() {
     try {
       setLoading(true);
 
+      if (isEmailLogin) {
+        await signInWithEmailAndPassword(auth, loginInput, password)
+        navigate('/mainpage')
+        return;
+      }
+
       const usersRef = collection(db, 'users')
-      const q = query(usersRef, where('username', '==', username))
+      const q = query(usersRef, where('username', '==', loginInput))
       const querySnapshot = await getDocs(q)
 
       if(querySnapshot.empty) {
@@ -61,6 +69,8 @@ function Login() {
     } catch (error) {
       if(error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         alert('Invalid credentials!')
+      } else if (error.code === 'permission-denied' || error.code === 'firestore/permission-denied') {
+        alert('Username login is blocked by Firestore rules. Use your email to log in, or allow users collection reads for login lookup.')
       } else {
         alert('Login failed: ' + error.message)
       }
@@ -133,7 +143,7 @@ function Login() {
         <input 
           className='userUsername' 
           type="text" 
-          placeholder="Username" 
+          placeholder="Username or Email" 
           required 
           value={username}
           onChange={(e) => setUsername(e.target.value)}

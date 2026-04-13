@@ -25,7 +25,7 @@ function Chatbot() {
   const messagesEndRef = useRef(null);
 
   // Backend API URL
-  const API_URL = 'https://chatbot-project-159z.onrender.com/api/chat';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/chat';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,7 +79,16 @@ function Chatbot() {
       });
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        let backendError = `API Error: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData?.error) {
+            backendError = errorData.error;
+          }
+        } catch {
+          // Ignore JSON parse errors and keep status-based fallback.
+        }
+        throw new Error(backendError);
       }
 
       const data = await response.json();

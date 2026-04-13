@@ -11,6 +11,16 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 }
 
+const missingFirebaseEnv = Object.entries(firebaseConfig)
+  .filter(([, value]) => !value)
+  .map(([key]) => key)
+
+if (missingFirebaseEnv.length > 0) {
+  throw new Error(
+    `Missing Firebase env vars: ${missingFirebaseEnv.join(', ')}. Check react/.env and Vercel environment variables.`
+  )
+}
+
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)

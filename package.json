@@ -2,6 +2,7 @@
   "name": "chatbot-project",
   "version": "1.0.0",
   "scripts": {
+    "start": "npm run dev",
     "dev": "cd react && npm run dev",
     "build": "cd react && npm run build",
     "preview": "cd react && npm run preview",
