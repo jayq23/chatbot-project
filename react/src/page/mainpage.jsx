@@ -25,7 +25,7 @@ function Chatbot() {
   const messagesEndRef = useRef(null);
 
   // Backend API URL
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/chat';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
