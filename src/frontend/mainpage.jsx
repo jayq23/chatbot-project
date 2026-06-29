@@ -1,22 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import '../styles/main.css';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import { signOut } from "firebase/auth";
+import { cleanMarkdown, shortenResponse } from '../utils/helpers';
+
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
 function Chatbot() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      navigate('/login');
-    }
-  });
-  
-  return () => unsubscribe();
-}, [navigate]);
   const [messages, setMessages] = useState([
     { text: "Hello! I'm Renz Chatbot. How can I help you today?", sender: 'bot' }
   ]);
@@ -24,82 +16,40 @@ function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Backend API URL
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) navigate('/login');
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Strip markdown formatting from AI response
-  const cleanMarkdown = (text) => {
-    return text
-      .replace(/\*\*\*(.*?)\*\*\*/g, '$1')
-      .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
-      .replace(/__(.*?)__/g, '$1')
-      .replace(/_(.*?)_/g, '$1')
-      .replace(/~~(.*?)~~/g, '$1')
-      .replace(/`{3}[\s\S]*?`{3}/g, '')
-      .replace(/`(.*?)`/g, '$1')
-      .replace(/^#{1,6}\s+/gm, '')
-      .replace(/^\s*[-*+]\s+/gm, '• ')
-      .replace(/^\s*\d+\.\s+/gm, '')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/^>\s+/gm, '')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
-  };
-
-  // Keep only the first 3 sentences of a response
-  const shortenResponse = (text) => {
-    const sentences = text.match(/[^.!?]+[.!?]+/g);
-    if (!sentences) return text;
-    return sentences.slice(0, 3).join(' ').trim();
-  };
-
-  // Function to call backend API
   const getAIResponse = async (userMessage) => {
     try {
-      // Wrap the user message to instruct the AI to be concise
-      const wrappedMessage = `Answer in 2-3 sentences max, no bullet points, keep it casual and short: ${userMessage}`;
-
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: wrappedMessage
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage })
       });
 
       if (!response.ok) {
         let backendError = `API Error: ${response.status}`;
         try {
           const errorData = await response.json();
-          if (errorData?.error) {
-            backendError = errorData.error;
-          }
-        } catch {
-          // Ignore JSON parse errors and keep status-based fallback.
-        }
+          if (errorData?.error) backendError = errorData.error;
+        } catch { }
         throw new Error(backendError);
       }
 
       const data = await response.json();
 
       if (data.success && data.response) {
-        const cleaned = cleanMarkdown(data.response);
-        return shortenResponse(cleaned);
+        return shortenResponse(cleanMarkdown(data.response));
       }
-      else {
-        return "I'm sorry, I couldn't process that request. Please try again.";
-      }
+      return "I'm sorry, I couldn't process that request. Please try again.";
     } catch (error) {
       console.error('Error calling backend API:', error);
       return "I'm experiencing technical difficulties. Error: " + error.message;
@@ -108,20 +58,16 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/ap
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-
     if (inputValue.trim() === '') return;
 
     const userMessage = { text: inputValue, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
     const currentInput = inputValue;
     setInputValue('');
-
     setIsTyping(true);
 
     const botResponseText = await getAIResponse(currentInput);
-    const botResponse = { text: botResponseText, sender: 'bot' };
-
-    setMessages(prev => [...prev, botResponse]);
+    setMessages(prev => [...prev, { text: botResponseText, sender: 'bot' }]);
     setIsTyping(false);
   };
 
@@ -133,11 +79,11 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/ap
   };
 
   const handleLogout = async () => {
-  if (window.confirm('Are you sure you want to log out?')) {
-    await signOut(auth);
-    navigate('/login');
-  }
-};
+    if (window.confirm('Are you sure you want to log out?')) {
+      await signOut(auth);
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="chatbot-container">
@@ -146,7 +92,7 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/ap
           <div className="header-text">
             <h2>Renz Chatbot</h2>
           </div>
-           <button className="logoutbtn" onClick={handleLogout}>Log Out</button>
+          <button className="logoutbtn" onClick={handleLogout}>Log Out</button>
         </div>
       </div>
 
@@ -156,22 +102,17 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/ap
             key={index}
             className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
           >
-            <div className="message-content">
-              {message.text}
-            </div>
+            <div className="message-content">{message.text}</div>
           </div>
         ))}
 
         {isTyping && (
           <div className="message bot-message">
             <div className="message-content typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
+              <span></span><span></span><span></span>
             </div>
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
 
