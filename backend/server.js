@@ -71,8 +71,8 @@ app.post('/api/chat', async (req, res) => {
 app.listen(PORT, () => {
   console.log('Server on port 5000');
   if (groqApiKey) {
-    console.log('API ✅');
+    console.log('API');
   } else {
-    console.warn('API ❌ Missing GROQ_API_KEY in backend/.env (chat endpoint will return a config error)');
+    console.warn('API  Missing GROQ_API_KEY in backend/.env (chat endpoint will return a config error)');
   }
 });
