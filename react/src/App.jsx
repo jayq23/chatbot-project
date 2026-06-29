@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Login from './auth/login.jsx'
 import Register from './auth/register.jsx'
-import Homepage from "./page/homepage.jsx";
-import Chatbot from "./page/mainpage.jsx";
+import Homepage from "./frontend/homepage.jsx";
+import Chatbot from "./frontend/mainpage.jsx";
 
 function App() {
   return (
