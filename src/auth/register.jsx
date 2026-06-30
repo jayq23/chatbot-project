@@ -73,7 +73,7 @@ function Register() {
 
   return (
     <div className="registerForm">
-      <button className="regbackbtn" onClick={() => navigate(-1)}>back</button>
+      <button className="regbackbtn" onClick={() => navigate('/')}>back</button>
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)} />
