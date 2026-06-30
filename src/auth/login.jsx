@@ -137,7 +137,7 @@ function Login() {
 
   return (
     <div className="loginForm">
-      <button className='backbtn' onClick={() => navigate(-1)}>back</button>
+      <button className='backbtn' onClick={() => navigate('/')}>back</button>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input 
