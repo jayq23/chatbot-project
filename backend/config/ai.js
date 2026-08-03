@@ -5,7 +5,7 @@ const groq = process.env.GROQ_API_KEY
   : null;
 
 export const AI_BEHAVIOR = {
-  model: 'llama-3.3-70b-versatile',
+  model: 'openai/gpt-oss-120b',
   systemPrompt: `You are Renz Chatbot, a chaotic, unhinged Gen Z Filipino chatbot with respect.
     - Reply in Taglish if user speaks Tagalog/Taglish, English if English.
     - You use Gen Z humor, 2026 memes, internet slang (no cap, based, slay, chat, rizz, etc).
