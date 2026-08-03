@@ -10,6 +10,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
+  background:
+    radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(180deg, #0b1020 0%, #0f172a 100%);
+  color: #e5e7eb;
 }
 
 .registerForm {
@@ -19,10 +23,14 @@ body {
   justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
-  background: #0d0d12;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(37, 99, 235, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(11, 16, 32, 0.98) 100%);
   padding: 2rem;
   padding-top: calc(2rem + env(safe-area-inset-top, 0px));
   padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  text-align: center;
 }
 
 .regbackbtn {
@@ -33,61 +41,64 @@ body {
   left: calc(20px + env(safe-area-inset-left, 0px));
   font-size: 13px;
   font-weight: 500;
-  border: 0.5px solid #3d3060;
-  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 10px;
   padding: 8px 14px;
   cursor: pointer;
-  background-color: #1a1a27;
-  color: #9b8fc4;
+  background-color: rgba(15, 23, 42, 0.78);
+  color: #cbd5e1;
   transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   min-width: 44px;
   min-height: 38px;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.2);
 }
 
 .regbackbtn:hover {
-  background-color: #2a2040;
-  color: #c4b8e8;
+  background-color: rgba(30, 41, 59, 0.96);
+  color: #f8fafc;
 }
 
 .registerForm h2 {
   font-size: 2rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 650;
+  color: #f8fafc;
   margin-bottom: 1.75rem;
   text-align: center;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
 }
 
 .registerForm form {
-  background: #1a1a27;
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.16);
   padding: 2.5rem 2.25rem;
-  border-radius: 16px;
+  border-radius: 20px;
   width: 100%;
   max-width: 400px;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
+  backdrop-filter: blur(14px);
 }
 
 .registerForm input {
   width: 100%;
   padding: 0.85rem 1.1rem;
   margin-bottom: 1.1rem;
-  border: 0.5px solid #3d3060;
-  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 12px;
   font-size: 1rem;
   transition: border-color 0.2s ease;
-  background-color: #0d0d12;
-  color: #e8e4f0;
+  background-color: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
 }
 
 .registerForm input:focus {
   outline: none;
-  border-color: #6c3fa8;
+  border-color: rgba(59, 130, 246, 0.75);
 }
 
 .registerForm input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(226, 232, 240, 0.45);
   font-weight: 400;
 }
 
@@ -98,10 +109,10 @@ body {
 .regbtn {
   width: 100%;
   padding: 0.9rem;
-  background: #6c3fa8;
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -109,10 +120,11 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   min-height: 44px;
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.22);
 }
 
 .regbtn:hover {
-  background-color: #8250c8;
+  background: linear-gradient(180deg, #2b6df6 0%, #1e40af 100%);
   transform: translateY(-1px);
 }
 
