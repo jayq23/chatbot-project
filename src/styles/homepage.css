@@ -1,168 +1,181 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior: none;
-}
-
-.home-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: #0d0d12;
-  padding: 2rem;
-  padding-top: calc(2rem + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
-  position: relative;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 2.5rem;
-  text-align: center;
-  letter-spacing: -0.5px;
-  animation: fadeInDown 0.6s ease-out;
-}
-
-.buttons {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  animation: fadeInUp 0.6s ease-out 0.15s both;
-}
-
-button {
-  padding: 0.875rem 2.25rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  border: 0.5px solid #3d3060;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 140px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  min-height: 44px;
-}
-
-.signinbtn {
-  background-color: #1a1a27;
-  color: #ffffff;
-}
-
-.signinbtn:hover {
-  background-color: #6c3fa8;
-  border-color: #6c3fa8;
-  transform: translateY(-2px);
-}
-
-.signupbtn {
-  background-color: #6c3fa8;
-  color: #ffffff;
-  border-color: #6c3fa8;
-}
-
-.signupbtn:hover {
-  background-color: #4e2687;
-  transform: translateY(-2px);
-}
-
-.signinbtn:active, .signupbtn:active {
-  transform: translateY(0);
-}
-
-.logo {
-  width: 100px;
-  height: auto;
-  margin-bottom: 1.75rem;
-  filter: invert(1) brightness(2);
-  animation: fadeInDown 0.6s ease-out 0.1s both;
-}
-
-footer {
-  position: absolute;
-  bottom: 2rem;
-  animation: fadeIn 0.6s ease-out 0.3s both;
-}
-
-footer p {
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.8125rem;
-  text-align: center;
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@media (max-width: 768px) {
-  h1 {
-    font-size: 1.875rem;
-    margin-bottom: 2rem;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  .buttons {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+    background:
+      radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 35%),
+      linear-gradient(180deg, #0b1020 0%, #0f172a 100%);
+    color: #e5e7eb;
+  }
+
+  .home-wrapper {
+    display: flex;
     flex-direction: column;
-    gap: 0.875rem;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(37, 99, 235, 0.14), transparent 30%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(11, 16, 32, 0.98) 100%);
+    padding: 2rem;
+    padding-top: calc(2rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    position: relative;
+    text-align: center;
+  }
+
+  .home-wrapper h1 {
+    font-size: 2.5rem;
+    font-weight: 650;
+    color: #f8fafc;
     margin-bottom: 2.5rem;
-    width: 100%;
-    max-width: 300px;
-  }
-
-  button {
-    width: 100%;
-    min-width: unset;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.625rem;
-  }
-
-  footer p {
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-  h1 {
-    font-size: 1.375rem;
-    margin-bottom: 1.25rem;
+    text-align: center;
+    letter-spacing: -0.5px;
+    animation: fadeInDown 0.6s ease-out;
+    max-width: 14ch;
   }
 
   .buttons {
-    flex-direction: row;
-    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeInUp 0.6s ease-out 0.15s both;
   }
 
-  footer {
-    position: static;
-    margin-top: 1rem;
+  .home-wrapper button {
+    padding: 0.875rem 2.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px;
+    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.24);
   }
-}
+
+  .signinbtn {
+    background: rgba(15, 23, 42, 0.82);
+    color: #e5e7eb;
+  }
+
+  .signinbtn:hover {
+    background: rgba(30, 41, 59, 0.96);
+    border-color: rgba(148, 163, 184, 0.35);
+    transform: translateY(-2px);
+  }
+
+  .signupbtn {
+    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    border-color: rgba(59, 130, 246, 0.55);
+  }
+
+  .signupbtn:hover {
+    background: linear-gradient(180deg, #2b6df6 0%, #1e40af 100%);
+    transform: translateY(-2px);
+  }
+
+  .signinbtn:active, .signupbtn:active {
+    transform: translateY(0);
+  }
+
+  .logo {
+    width: 172px;
+    height: auto;
+    margin-bottom: 1.5rem;
+    padding: 0.9rem;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.04);
+    filter: invert(1) brightness(1.85) contrast(1.05)
+      drop-shadow(0 14px 30px rgba(15, 23, 42, 0.35));
+    animation: fadeInDown 0.6s ease-out 0.1s both;
+  }
+
+  .home-wrapper footer {
+    position: absolute;
+    bottom: 2rem;
+    animation: fadeIn 0.6s ease-out 0.3s both;
+  }
+
+  .home-wrapper footer p {
+    color: rgba(226, 232, 240, 0.58);
+    font-size: 0.8125rem;
+    text-align: center;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .home-wrapper h1 {
+      font-size: 1.875rem;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      flex-direction: column;
+      gap: 0.875rem;
+      margin-bottom: 2.5rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .home-wrapper button {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .home-wrapper h1 {
+      font-size: 1.625rem;
+    }
+
+    .home-wrapper footer p {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .home-wrapper h1 {
+      font-size: 1.375rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .buttons {
+      flex-direction: row;
+      margin-bottom: 1.5rem;
+    }
+
+    .home-wrapper footer {
+      position: static;
+      margin-top: 1rem;
+    }
+  }
