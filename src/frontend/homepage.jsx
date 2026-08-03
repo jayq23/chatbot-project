@@ -18,7 +18,7 @@ function Homepage() {
       <img className='logo' src={logo} alt="renz Chatbot Logo" />
       <h1>Welcome to Renz Chatbot!</h1>
       <div className="buttons">
-        <button className="signinbtn" onClick={handleSignIn}>sign in</button>
+        <button className="signinbtn" onClick={handleSignIn}>Sign In</button>
         <button className="signupbtn" onClick={handleSignUp}>Sign Up</button>
       </div>
       <footer>
