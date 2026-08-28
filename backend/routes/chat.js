@@ -12,19 +12,47 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    const { message } = req.body;
+    const { message, userName, history = [] } = req.body;
+
+    // Convert frontend history into Groq message format
+    const conversationHistory = history
+      .slice(-7)
+      .map((item) => ({
+        role: item.sender === 'user' ? 'user' : 'assistant',
+        content: item.text
+      }));
 
     const completion = await groq.chat.completions.create({
       model: AI_BEHAVIOR.model,
       messages: [
-        { role: 'system', content: AI_BEHAVIOR.systemPrompt },
-        { role: 'user', content: message }
+        {
+          role: 'system',
+          content: AI_BEHAVIOR.systemPrompt(userName)
+        },
+
+        // Previous 7 messages
+        ...conversationHistory,
+
+        // Current message
+        {
+          role: 'user',
+          content: message
+        }
       ],
     });
 
-    res.json({ success: true, response: completion.choices[0].message.content });
+    res.json({
+      success: true,
+      response: completion.choices[0].message.content
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Chat API error:', error);
+
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
 

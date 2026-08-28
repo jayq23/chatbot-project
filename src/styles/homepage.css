@@ -1,4 +1,4 @@
-  * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -44,6 +44,38 @@
     max-width: 14ch;
   }
 
+  .brand-name-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.brand-name {
+  font-size: 52px;
+  font-weight: 800;
+  color: #ffffff;
+  display: inline-block;
+  transition: color 0.05s, text-shadow 0.05s;
+}
+
+.bolt {
+  position: absolute;
+  width: 46px;
+  height: auto;
+  top: -30px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.05s;
+}
+
+.bolt-left {
+  left: -56px;
+}
+
+.bolt-right {
+  right: -56px;
+  top: 10px;
+  transform: scaleX(-1);
+}
   .buttons {
     display: flex;
     gap: 1rem;

@@ -4,25 +4,56 @@ import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { cleanMarkdown, shortenResponse } from '../utils/helpers';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  serverTimestamp
+} from 'firebase/firestore';
+
+import { db } from '../../firebase';
 
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
 function Chatbot() {
   const navigate = useNavigate();
+
   const [messages, setMessages] = useState([
-    { text: "Hello! I'm Renz Chatbot. How can I help you today?", sender: 'bot' }
+    { text: "Hello! How can I help you today?", sender: 'bot' }
   ]);
+
   const [inputValue, setInputValue] = useState('');
+  const [userName, setUserName] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Get currently logged-in user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) navigate('/login');
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
+      const name = user.displayName || user.email || 'User';
+      setUserName(name);
+
+      // Personalize the greeting once we know who they are
+      setMessages(prev => {
+        if (prev.length === 1 && prev[0].sender === 'bot') {
+          return [{ text: `Hello, ${name}!`, sender: 'bot' }];
+        }
+        return prev;
+      });
     });
+
     return () => unsubscribe();
   }, [navigate]);
 
+  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -31,16 +62,29 @@ function Chatbot() {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          userName: userName,
+          history: messages.map(msg => ({ text: msg.text, sender: msg.sender }))
+        })
       });
 
       if (!response.ok) {
         let backendError = `API Error: ${response.status}`;
+
         try {
           const errorData = await response.json();
-          if (errorData?.error) backendError = errorData.error;
-        } catch { }
+
+          if (errorData?.error) {
+            backendError = errorData.error;
+          }
+        } catch {
+          // Ignore JSON parsing error
+        }
+
         throw new Error(backendError);
       }
 
@@ -49,25 +93,43 @@ function Chatbot() {
       if (data.success && data.response) {
         return shortenResponse(cleanMarkdown(data.response));
       }
+
       return "I'm sorry, I couldn't process that request. Please try again.";
+
     } catch (error) {
       console.error('Error calling backend API:', error);
+
       return "I'm experiencing technical difficulties. Error: " + error.message;
     }
   };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+
     if (inputValue.trim() === '') return;
 
-    const userMessage = { text: inputValue, sender: 'user' };
+    const userMessage = {
+      text: inputValue,
+      sender: 'user'
+    };
+
     setMessages(prev => [...prev, userMessage]);
+
     const currentInput = inputValue;
+
     setInputValue('');
     setIsTyping(true);
 
     const botResponseText = await getAIResponse(currentInput);
-    setMessages(prev => [...prev, { text: botResponseText, sender: 'bot' }]);
+
+    setMessages(prev => [
+      ...prev,
+      {
+        text: botResponseText,
+        sender: 'bot'
+      }
+    ]);
+
     setIsTyping(false);
   };
 
@@ -87,36 +149,60 @@ function Chatbot() {
 
   return (
     <div className="chatbot-container">
+
       <div className="chatbot-header">
         <div className="header-content">
+
           <div className="header-text">
-            <h2>Renz Chatbot</h2>
+            <h2>TalkToJay</h2>
           </div>
-          <button className="logoutbtn" onClick={handleLogout}>Log Out</button>
+
+          <button
+            className="logoutbtn"
+            onClick={handleLogout}
+          >
+            Log Out
+          </button>
+
         </div>
       </div>
 
       <div className="chatbot-messages">
+
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
+            className={`message ${
+              message.sender === 'user'
+                ? 'user-message'
+                : 'bot-message'
+            }`}
           >
-            <div className="message-content">{message.text}</div>
+            <div className="message-content">
+              {message.text}
+            </div>
           </div>
         ))}
 
         {isTyping && (
           <div className="message bot-message">
             <div className="message-content typing-indicator">
-              <span></span><span></span><span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
           </div>
         )}
+
         <div ref={messagesEndRef} />
+
       </div>
 
-      <form className="chatbot-input-form" onSubmit={handleSendMessage}>
+      <form
+        className="chatbot-input-form"
+        onSubmit={handleSendMessage}
+      >
+
         <input
           type="text"
           value={inputValue}
@@ -126,13 +212,38 @@ function Chatbot() {
           className="chatbot-input"
           disabled={isTyping}
         />
-        <button type="submit" className="send-button" disabled={isTyping}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+
+        <button
+          type="submit"
+          className="send-button"
+          disabled={isTyping}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M22 2L11 13"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+
+            <path
+              d="M22 2L15 22L11 13L2 9L22 2Z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </button>
+
       </form>
+
     </div>
   );
 }

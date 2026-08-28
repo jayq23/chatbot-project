@@ -5,9 +5,6 @@ import rateLimit from 'express-rate-limit';
 const allowedOrigins = [
   process.env.FRONTEND_ORIGIN,
   'http://localhost:5173',
-  'http://localhost:5174',
-  'https://chatbot-project-nyd8.vercel.app',
-  'https://renz-chatbot.vercel.app'
 ].filter(Boolean);
 
 export const corsMiddleware = cors({
