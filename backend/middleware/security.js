@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 const allowedOrigins = [
   process.env.FRONTEND_ORIGIN,
   'http://localhost:5173',
+  'https://talktojay.vercel.app'
 ].filter(Boolean);
 
 export const corsMiddleware = cors({
