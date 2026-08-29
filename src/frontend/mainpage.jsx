@@ -38,7 +38,7 @@ function Chatbot() {
         return;
       }
 
-      const name = user.displayName || user.email || 'User';
+      const name = user.displayName || user.email?.split('@')[0] || 'User';
       setUserName(name);
 
       // Personalize the greeting once we know who they are
