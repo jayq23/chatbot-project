@@ -146,15 +146,16 @@ body {
 /* Message rows */
 .message {
   display: flex;
+  flex-direction: column;
   animation: messageIn 0.25s ease-out;
 }
 
 .bot-message {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .user-message {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 /* Bubbles */
