@@ -19,8 +19,7 @@ import { db } from '../../firebase';
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
 const SAD_SONG = [
-  "https://open.spotify.com/embed/track/6Uwi2Qk3H7fM4b4W4ExrAp?utm_source=generator",
-  "https://open.spotify.com/embed/track/7wTqEW5nrMhvyEhEyTnOMd?utm_source=generator",
+  "https://embed.music.apple.com/ph/album/what-if-i-call/6788172076?i=6788172077",
 ];
 //https://open.spotify.com/embed/playlist/75G673C0CSAqDgeJb9AYAG?utm_source=generator&autoplay=1
 function getRandomSadSong() {
@@ -184,7 +183,7 @@ function Chatbot() {
       }}
      src={message.songUrl}
       width="100%"
-      height="80"
+      height="150"
       frameBorder="0"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading="lazy"
