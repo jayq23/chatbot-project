@@ -18,6 +18,20 @@ import { db } from '../../firebase';
 
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
+const SAD_SONG = [
+  "https://open.spotify.com/embed/track/6Uwi2Qk3H7fM4b4W4ExrAp?utm_source=generator",
+  "https://open.spotify.com/embed/track/7wTqEW5nrMhvyEhEyTnOMd?utm_source=generator",
+];
+//https://open.spotify.com/embed/playlist/75G673C0CSAqDgeJb9AYAG?utm_source=generator&autoplay=1
+function getRandomSadSong() {
+  return SAD_SONG[Math.floor(Math.random() * SAD_SONG.length)];
+}
+function parseMood(text) {
+  const isSad = text.includes('[MOOD:SAD]');
+  const cleanText = text.replace('[MOOD:SAD]', '').trim();
+  return { cleanText, isSad };
+}
+
 function Chatbot() {
   const navigate = useNavigate();
 
@@ -59,79 +73,62 @@ function Chatbot() {
   }, [messages]);
 
   const getAIResponse = async (userMessage) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          userName: userName,
-          history: messages.map(msg => ({ text: msg.text, sender: msg.sender }))
-        })
-      });
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: userMessage,
+        userName: userName,
+        history: messages.map(msg => ({ text: msg.text, sender: msg.sender }))
+      })
+    });
 
-      if (!response.ok) {
-        let backendError = `API Error: ${response.status}`;
-
-        try {
-          const errorData = await response.json();
-
-          if (errorData?.error) {
-            backendError = errorData.error;
-          }
-        } catch {
-          // Ignore JSON parsing error
-        }
-
-        throw new Error(backendError);
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.response) {
-        return shortenResponse(cleanMarkdown(data.response));
-      }
-
-      return "I'm sorry, I couldn't process that request. Please try again.";
-
-    } catch (error) {
-      console.error('Error calling backend API:', error);
-
-      return "I'm experiencing technical difficulties. Error: " + error.message;
+    if (!response.ok) {
+      let backendError = `API Error: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData?.error) backendError = errorData.error;
+      } catch {}
+      throw new Error(backendError);
     }
-  };
+
+    const data = await response.json();
+
+    if (data.success && data.response) {
+      const { cleanText, isSad } = parseMood(data.response);
+      const finalText = shortenResponse(cleanMarkdown(cleanText));
+      return { text: finalText, isSad };
+    }
+
+    return { text: "I'm sorry, I couldn't process that request. Please try again.", isSad: false };
+
+  } catch (error) {
+    console.error('Error calling backend API:', error);
+    return { text: "I'm experiencing technical difficulties. Error: " + error.message, isSad: false };
+  }
+};
 
   const handleSendMessage = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  if (inputValue.trim() === '') return;
 
-    if (inputValue.trim() === '') return;
+  const userMessage = { text: inputValue, sender: 'user' };
+  setMessages(prev => [...prev, userMessage]);
 
-    const userMessage = {
-      text: inputValue,
-      sender: 'user'
-    };
+  const currentInput = inputValue;
+  setInputValue('');
+  setIsTyping(true);
 
-    setMessages(prev => [...prev, userMessage]);
+  const { text, isSad } = await getAIResponse(currentInput);
 
-    const currentInput = inputValue;
+  setMessages(prev => [
+  ...prev,
+  { text, sender: 'bot', mood: isSad ? 'sad' : null, songUrl: isSad ? getRandomSadSong() : null }
+]);
 
-    setInputValue('');
-    setIsTyping(true);
-
-    const botResponseText = await getAIResponse(currentInput);
-
-    setMessages(prev => [
-      ...prev,
-      {
-        text: botResponseText,
-        sender: 'bot'
-      }
-    ]);
-
-    setIsTyping(false);
-  };
+  setIsTyping(false);
+};
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -169,20 +166,32 @@ function Chatbot() {
 
       <div className="chatbot-messages">
 
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`message ${
-              message.sender === 'user'
-                ? 'user-message'
-                : 'bot-message'
-            }`}
-          >
-            <div className="message-content">
-              {message.text}
-            </div>
-          </div>
-        ))}
+      {messages.map((message, index) => (
+      <div key={index} className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
+      <div className="message-content">
+        {message.text}
+      </div>
+
+      {message.mood === 'sad' && message.songUrl && (
+      <iframe
+      style={{
+      borderRadius: '8px',
+      marginTop: '8px',
+      width: '100%',
+      maxWidth: '300px',
+      display: 'block',
+      clear: 'both'
+      }}
+     src={message.songUrl}
+      width="100%"
+      height="80"
+      frameBorder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
+    />
+    )}
+    </div>
+  ))}
 
         {isTyping && (
           <div className="message bot-message">
