@@ -72,7 +72,7 @@ function Homepage() {
         <button className="signupbtn" onClick={handleSignUp}>Sign Up</button>
       </div>
       <footer>
-        <p>© 2026 TalkToJay. Powered by AI, fueled by your humor.</p>
+        <p>© 2026 TalkToJay. fueled by your humor.</p>
       </footer>
     </div>
   );
