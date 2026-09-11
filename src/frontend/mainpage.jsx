@@ -4,31 +4,72 @@ import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { cleanMarkdown, shortenResponse } from '../utils/helpers';
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-  serverTimestamp
-} from 'firebase/firestore';
-
-import { db } from '../../firebase';
 
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/chat';
 
-const SAD_SONG = [
-  "https://embed.music.apple.com/ph/album/what-if-i-call/6788172076?i=6788172077",
-];
-//https://open.spotify.com/embed/playlist/75G673C0CSAqDgeJb9AYAG?utm_source=generator&autoplay=1
-function getRandomSadSong() {
-  return SAD_SONG[Math.floor(Math.random() * SAD_SONG.length)];
+const SONG_CHOICES = {
+  Relapse: [
+   "https://embed.music.apple.com/ph/album/what-if-i-call/6788172076?i=6788172077",
+   "https://embed.music.apple.com/ph/album/merry-christmas-i-miss-you/6784789928?i=6784789929",
+   "https://embed.music.apple.com/ph/album/merry-christmas-please-dont-call/1775877095?i=1775877096",
+   "https://embed.music.apple.com/ph/album/loml/1742057774?i=1742058103",
+   "https://embed.music.apple.com/ph/album/lifetime-reimagined/1887316728?i=1887316735",
+   "https://embed.music.apple.com/ph/album/panaginip/1821585683?i=1821585685",
+   "https://embed.music.apple.com/ph/album/end-of-beginning/1632447652?i=1632448108"
+  ],
+  Healing: [
+   "https://embed.music.apple.com/ph/album/youre-on-your-own-kid/1649434004?i=1649434298",
+  ],
+  Love: [
+   "https://embed.music.apple.com/ph/album/love-story-taylors-version/1552791073?i=1552791427",
+   "https://embed.music.apple.com/ph/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443",
+   "https://embed.music.apple.com/ph/album/libu-libong-buwan-uuwian/1833479414?i=1833479419",
+  ],
+  brokenhearted: [
+   "https://embed.music.apple.com/ph/album/the-1/1524801260?i=1524801274",
+   "https://embed.music.apple.com/ph/album/youre-losing-me-from-the-vault/1718576580?i=1718576584",
+   "https://embed.music.apple.com/ph/album/indecision-feat-daniel-caesar-single/6797490125"
+  ],
+  Motivation: [
+   
+  ],
+  Comeback: [
+   "https://embed.music.apple.com/ph/album/rosas-feat-skusta-clee/1862444504?i=1862445191",
+  ],
+  Vibes: [
+   "https://embed.music.apple.com/ph/album/pauwi-nako/1420486990?i=1420487203",
+   "https://embed.music.apple.com/ph/album/sa-susunod-na-lang/1438142527?i=1438142923",
+   "https://embed.music.apple.com/ph/album/dyosa-live/1780496650?i=1780496654"
+  ]
+};
+
+// Kunin ang exact na kanta base sa number na ibinigay ng LLM (1-based index sa prompt list)
+function getSongByIndex(mood, songNumber) {
+  const choices = SONG_CHOICES[mood];
+  if (!choices || choices.length === 0) return null;
+
+  const index = songNumber - 1; // convert 1-based (prompt) -> 0-based (array)
+  if (Number.isNaN(index) || index < 0 || index >= choices.length) {
+    // fallback: kung invalid/out-of-range yung number, random na lang
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+  return choices[index];
 }
+
+// Fallback lang ito kung walang songNumber na ibinigay (e.g. Motivation na walang songs)
+function getRandomSong(mood) {
+  const choices = SONG_CHOICES[mood];
+  if (!choices || choices.length === 0) return null;
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
 function parseMood(text) {
-  const isSad = text.includes('[MOOD:SAD]');
-  const cleanText = text.replace('[MOOD:SAD]', '').trim();
-  return { cleanText, isSad };
+  // bagong format: [MOOD:Category:Number] o [MOOD:Category] (walang song number, e.g. Motivation)
+  const moodMatch = text.match(/\[MOOD:(\w+)(?::(\d+))?\]/);
+  const mood = moodMatch ? moodMatch[1] : null;
+  const songNumber = moodMatch && moodMatch[2] ? parseInt(moodMatch[2], 10) : null;
+  const cleanText = text.replace(/\[MOOD:\w+(?::\d+)?\]/, '').trim();
+  return { cleanText, mood, songNumber };
 }
 
 function Chatbot() {
@@ -95,12 +136,12 @@ function Chatbot() {
     const data = await response.json();
 
     if (data.success && data.response) {
-      const { cleanText, isSad } = parseMood(data.response);
-      const finalText = shortenResponse(cleanMarkdown(cleanText));
-      return { text: finalText, isSad };
-    }
+  const { cleanText, mood, songNumber } = parseMood(data.response);
+  const finalText = shortenResponse(cleanMarkdown(cleanText));
+  return { text: finalText, mood, songNumber };
+}
 
-    return { text: "I'm sorry, I couldn't process that request. Please try again.", isSad: false };
+    return { text: "I'm sorry, I couldn't process that request. Please try again.", mood: null, songNumber: null };
 
   } catch (error) {
     console.error('Error calling backend API:', error);
@@ -119,12 +160,15 @@ function Chatbot() {
   setInputValue('');
   setIsTyping(true);
 
-  const { text, isSad } = await getAIResponse(currentInput);
+  const { text, mood, songNumber } = await getAIResponse(currentInput);
+  const songUrl = mood
+    ? (songNumber ? getSongByIndex(mood, songNumber) : getRandomSong(mood))
+    : null;
 
   setMessages(prev => [
-  ...prev,
-  { text, sender: 'bot', mood: isSad ? 'sad' : null, songUrl: isSad ? getRandomSadSong() : null }
-]);
+    ...prev,
+    { text, sender: 'bot', mood, songUrl }
+  ]);
 
   setIsTyping(false);
 };
@@ -166,31 +210,31 @@ function Chatbot() {
       <div className="chatbot-messages">
 
       {messages.map((message, index) => (
-      <div key={index} className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
-      <div className="message-content">
-        {message.text}
-      </div>
-
-      {message.mood === 'sad' && message.songUrl && (
-      <iframe
-      style={{
-      borderRadius: '8px',
-      marginTop: '8px',
-      width: '100%',
-      maxWidth: '300px',
-      display: 'block',
-      clear: 'both'
-      }}
-     src={message.songUrl}
-      width="100%"
-      height="150"
-      frameBorder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy"
-    />
-    )}
+  <div key={index} className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
+    <div className="message-content">
+      {message.text}
     </div>
-  ))}
+
+    {message.songUrl && (
+      <iframe
+        style={{
+          borderRadius: '12px',
+          marginTop: '8px',
+          width: '100%',
+          maxWidth: '320px',
+          display: 'block'
+        }}
+        src={message.songUrl}
+        width="100%"
+        height="150"
+        frameBorder="0"
+        allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        loading="lazy"
+      />
+    )}
+  </div>
+))}
 
         {isTyping && (
           <div className="message bot-message">
