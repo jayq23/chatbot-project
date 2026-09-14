@@ -15,48 +15,75 @@ const SONG_CHOICES = {
    "https://embed.music.apple.com/ph/album/loml/1742057774?i=1742058103",
    "https://embed.music.apple.com/ph/album/lifetime-reimagined/1887316728?i=1887316735",
    "https://embed.music.apple.com/ph/album/panaginip/1821585683?i=1821585685",
-   "https://embed.music.apple.com/ph/album/end-of-beginning/1632447652?i=1632448108"
+   "https://embed.music.apple.com/ph/album/end-of-beginning/1632447652?i=1632448108",
+   "https://embed.music.apple.com/ph/album/photograph/1728406717?i=1728406718",
+   "https://embed.music.apple.com/ph/album/happier/1728406717?i=1728407376",
+   "https://embed.music.apple.com/ph/album/iraya/1458737492?i=1458737499",
+   "https://embed.music.apple.com/ph/album/somebody-else/1440840422?i=1440841304",
+   "https://embed.music.apple.com/ph/album/all-i-need-to-hear/1850018862?i=1850019034"
   ],
   Healing: [
    "https://embed.music.apple.com/ph/album/youre-on-your-own-kid/1649434004?i=1649434298",
+   "https://embed.music.apple.com/ph/album/in-the-stars/1728406717?i=1728406725",
   ],
   Love: [
    "https://embed.music.apple.com/ph/album/love-story-taylors-version/1552791073?i=1552791427",
    "https://embed.music.apple.com/ph/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443",
    "https://embed.music.apple.com/ph/album/libu-libong-buwan-uuwian/1833479414?i=1833479419",
+   "https://embed.music.apple.com/ph/album/thinking-out-loud/1728406717?i=1728407151",
+   "https://embed.music.apple.com/ph/album/yellow/1728406717?i=1728407168",
+   "https://embed.music.apple.com/ph/album/still-into-you/1728406717?i=1728407176",
+   "https://embed.music.apple.com/ph/album/drop-dead/1889992111?i=1889992113",
+   "https://embed.music.apple.com/ph/album/maikees-letters/1458777479?i=1458777482",
+   "https://embed.music.apple.com/ph/album/co-pilot-feat-jolo-rjay-ty/1458737492?i=1458737495"
   ],
   brokenhearted: [
    "https://embed.music.apple.com/ph/album/the-1/1524801260?i=1524801274",
    "https://embed.music.apple.com/ph/album/youre-losing-me-from-the-vault/1718576580?i=1718576584",
-   "https://embed.music.apple.com/ph/album/indecision-feat-daniel-caesar-single/6797490125"
+   "https://embed.music.apple.com/ph/album/indecision-feat-daniel-caesar-single/6797490125",
+   "https://embed.music.apple.com/ph/album/backburner/1766383174?i=1766383338",
+   "https://embed.music.apple.com/ph/album/oceans-engines/1766383174?i=1766383800",
+   "https://embed.music.apple.com/ph/album/all-i-wanted/1728406717?i=1728406722",
+   "https://embed.music.apple.com/ph/album/dawns-feat-maggie-rogers/1728406717?i=1728407385",
+   "https://embed.music.apple.com/ph/album/super-far/1440893646?i=1440894151",
   ],
   Motivation: [
-   
+   "https://embed.music.apple.com/ph/album/cheerleader-felix-jaehn-remix-radio-edit/1033360002?i=1033360497",
+   "https://embed.music.apple.com/ph/album/safe-and-sound/1766005775?i=1766005776",
+   "https://embed.music.apple.com/ph/album/shinobi/1229585918?i=1229585919",
+   "https://embed.music.apple.com/ph/album/stop-crying-your-heart-out/821026276?i=821026309",
   ],
   Comeback: [
    "https://embed.music.apple.com/ph/album/rosas-feat-skusta-clee/1862444504?i=1862445191",
+   "https://embed.music.apple.com/ph/album/wouldve-been-you/1716618620?i=1716618621",
+   "https://embed.music.apple.com/ph/album/a-sky-full-of-stars/1728406717?i=1728406719",
+   "https://embed.music.apple.com/ph/album/happiest-year/1728406717?i=1728407170",
+   "https://embed.music.apple.com/ph/album/the-scientist/1728406717?i=1728407361",
+   "https://embed.music.apple.com/ph/album/di-ako-f-y-feat-agsunta/1243634221?i=1243634230",
+   "https://embed.music.apple.com/ph/album/party-4-u/1513162098?i=1513162746"
   ],
   Vibes: [
    "https://embed.music.apple.com/ph/album/pauwi-nako/1420486990?i=1420487203",
    "https://embed.music.apple.com/ph/album/sa-susunod-na-lang/1438142527?i=1438142923",
-   "https://embed.music.apple.com/ph/album/dyosa-live/1780496650?i=1780496654"
+   "https://embed.music.apple.com/ph/album/dyosa-live/1780496650?i=1780496654",
+   "https://embed.music.apple.com/ph/album/blinding-lights/1488408555?i=1488408568",
+   "https://embed.music.apple.com/ph/album/no-broke-boys/1818761033?i=1818761158",
+   "https://embed.music.apple.com/ph/album/alam-ko-na-feat-just-hush-third-flo/1666464930?i=1666464938",
   ]
 };
 
-// Kunin ang exact na kanta base sa number na ibinigay ng LLM (1-based index sa prompt list)
 function getSongByIndex(mood, songNumber) {
   const choices = SONG_CHOICES[mood];
   if (!choices || choices.length === 0) return null;
 
-  const index = songNumber - 1; // convert 1-based (prompt) -> 0-based (array)
+  const index = songNumber - 1; 
   if (Number.isNaN(index) || index < 0 || index >= choices.length) {
-    // fallback: kung invalid/out-of-range yung number, random na lang
+
     return choices[Math.floor(Math.random() * choices.length)];
   }
   return choices[index];
 }
 
-// Fallback lang ito kung walang songNumber na ibinigay (e.g. Motivation na walang songs)
 function getRandomSong(mood) {
   const choices = SONG_CHOICES[mood];
   if (!choices || choices.length === 0) return null;
@@ -64,12 +91,43 @@ function getRandomSong(mood) {
 }
 
 function parseMood(text) {
-  // bagong format: [MOOD:Category:Number] o [MOOD:Category] (walang song number, e.g. Motivation)
+
   const moodMatch = text.match(/\[MOOD:(\w+)(?::(\d+))?\]/);
   const mood = moodMatch ? moodMatch[1] : null;
   const songNumber = moodMatch && moodMatch[2] ? parseInt(moodMatch[2], 10) : null;
   const cleanText = text.replace(/\[MOOD:\w+(?::\d+)?\]/, '').trim();
   return { cleanText, mood, songNumber };
+}
+
+
+function getTodayKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+}
+
+
+function getDailySong(mood, songNumber, uid) {
+  if (!mood || !uid) return null;
+
+  const storageKey = `talktojay_song_${uid}_${mood}`;
+  const todayKey = getTodayKey();
+
+  try {
+    const stored = JSON.parse(localStorage.getItem(storageKey) || 'null');
+
+    if (stored && stored.date === todayKey && stored.url) {
+
+      return stored.url;
+    }
+
+    const chosenUrl = songNumber ? getSongByIndex(mood, songNumber) : getRandomSong(mood);
+    if (!chosenUrl) return null;
+
+    localStorage.setItem(storageKey, JSON.stringify({ date: todayKey, url: chosenUrl }));
+    return chosenUrl;
+  } catch {
+    return songNumber ? getSongByIndex(mood, songNumber) : getRandomSong(mood);
+  }
 }
 
 function Chatbot() {
@@ -81,10 +139,10 @@ function Chatbot() {
 
   const [inputValue, setInputValue] = useState('');
   const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Get currently logged-in user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -94,8 +152,9 @@ function Chatbot() {
 
       const name = user.displayName || user.email?.split('@')[0] || 'User';
       setUserName(name);
+      setUserId(user.uid);
 
-      // Personalize the greeting once we know who they are
+
       setMessages(prev => {
         if (prev.length === 1 && prev[0].sender === 'bot') {
           return [{ text: `Hello, ${name}!`, sender: 'bot' }];
@@ -161,9 +220,7 @@ function Chatbot() {
   setIsTyping(true);
 
   const { text, mood, songNumber } = await getAIResponse(currentInput);
-  const songUrl = mood
-    ? (songNumber ? getSongByIndex(mood, songNumber) : getRandomSong(mood))
-    : null;
+  const songUrl = getDailySong(mood, songNumber, userId);
 
   setMessages(prev => [
     ...prev,
