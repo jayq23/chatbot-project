@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'TalkToJay',
         short_name: 'TalkToJay',
-        description: 'A conversational AI assistant.',
+        description: 'A fun app that made to talk to Jay and make crazy conversations with him.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
