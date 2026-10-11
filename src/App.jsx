@@ -78,7 +78,6 @@ function InstallPrompt() {
   return (
     <div className="install-prompt-backdrop" role="presentation">
       <section className="install-prompt" role="dialog" aria-modal="true" aria-labelledby="install-title">
-        <div className="install-prompt-icon" aria-hidden="true">+</div>
         <p className="install-prompt-label">TalkToJay app</p>
         <h2 id="install-title">Install TalkToJay?</h2>
         <p className="install-prompt-copy">
