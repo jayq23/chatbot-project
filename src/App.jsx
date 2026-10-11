@@ -82,7 +82,7 @@ function InstallPrompt() {
         <h2 id="install-title">Install TalkToJay?</h2>
         <p className="install-prompt-copy">
           {installEvent
-            ? 'Get a faster, app-like way to open your personal chatbot.'
+            ? 'Get quick access to use the app to start chatting with Jay.'
             : installInstructions}
         </p>
         <div className="install-prompt-actions">
