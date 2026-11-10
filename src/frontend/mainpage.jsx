@@ -69,6 +69,7 @@ const SONG_CHOICES = {
    "https://embed.music.apple.com/ph/album/blinding-lights/1488408555?i=1488408568",
    "https://embed.music.apple.com/ph/album/no-broke-boys/1818761033?i=1818761158",
    "https://embed.music.apple.com/ph/album/alam-ko-na-feat-just-hush-third-flo/1666464930?i=1666464938",
+   "https://embed.music.apple.com/ph/album/padaba-taka/1650353570?i=1650353573",
   ]
 };
 
