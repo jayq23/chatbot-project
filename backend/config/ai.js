@@ -140,8 +140,9 @@ export const AI_BEHAVIOR = {
       4. "Blinding Lights" - upbeat, energetic good mood
       5. "No Broke Boys" - fun, playful confidence
       6. "Alam Ko Na" - carefree, feel-good energy
-      7. "Padaba Taka" - bicol, mentioned bicol, 
-
+      7. "Padaba Taka" - when user want to go to bicol and also if they miss bicol.
+      
       Only tag when the emotional signal is genuinely present and sincere, and only pick a song number that actually exists in the list above for that category. Default to no tag when unsure.`
+
 };
 export default groq;
